@@ -1,0 +1,8 @@
+---
+
+- name: Verify Playbook
+  hosts: all
+  tasks:
+    - name: Execute rclone command
+      ansible.builtin.command: ffmpeg -version
+      changed_when: false

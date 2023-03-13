@@ -1,0 +1,18 @@
+---
+
+- name: Create installation directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - "{{ ffmpeg_bin_path }}"
+    - "{{ ffmpeg_data_path }}"
+    - "{{ ffmpeg_doc_path }}"
+
+- name: Create temp directory
+  ansible.builtin.tempfile:
+    state: directory
+  register: ffmpeg_build_path

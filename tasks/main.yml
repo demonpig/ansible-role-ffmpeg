@@ -1,0 +1,13 @@
+---
+
+- ansible.builtin.include_tasks: prep-env.yml
+
+- name: Compile ffmpeg from source
+  when: ffmpeg_compile_src
+  ansible.builtin.include_tasks: compile-src.yml
+  
+- name: Download static build of ffmpeg
+  when: 
+    - ffmpeg_use_release_build or ffmpeg_use_git_build
+    - not ffmpeg_compile_src
+  ansible.builtin.include_tasks: download-static-build.yml

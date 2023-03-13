@@ -1,0 +1,75 @@
+---
+
+# this task is for download static builds from https://johnvansickle.com/ffmpeg/. This site was directly linked
+# from ffmpeg's main site. 
+
+- name: Gather facts about the system
+  ansible.builtin.setup:
+    gather_subset:
+      - architecture
+  when: ansible_architecture is not defined
+
+# the reason for doing the arch_map is that ansible only shows x86_64, i386, etc but the ffmpeg site only does
+# amd64, arm64. So some values line up while others wont. Its not ideal but if I find another way then we
+# can avoid this step altogether.
+- name: Set build_arch variable
+  ansible.builtin.set_fact:
+    build_arch: "{{ arch_map[ansible_architecture] }}"
+  vars:
+    arch_map:
+      x86_64: "amd64"
+
+- name: Get shared variables
+  ansible.builtin.include_vars: "{{ item }}"
+  loop:
+    - vars/main.yml
+    - vars/static-build.yml
+
+- name: Set URLs for release build
+  ansible.builtin.set_fact:
+    ffmpeg_url: "{{ _static_release_build_url }}"
+    ffmpeg_info_url: "{{ _static_build_info_url }}"
+  when: ffmpeg_use_release_build
+
+- name: Set URLs for git build
+  ansible.builtin.set_fact:
+    ffmpeg_url: "{{ _static_git_build_url }}"
+    ffmpeg_info_url: "{{ _static_build_info_url }}"
+  when: ffmpeg_use_git_build
+
+- name: Download and extract the static build to temp directory
+  ansible.builtin.unarchive:
+    src: "{{ ffmpeg_url }}"
+    dest: "{{ ffmpeg_build_path.path }}/"
+    remote_src: true
+    list_files: true
+  register: artifact
+    
+# {{ artifacts.files[-1] | dirname }} should return the extracted directory from the
+# zip archive. See the documentation for the unarchive module for more details.
+- name: Install components from download archive
+  ansible.builtin.copy:
+    src: "{{ ffmpeg_build_path.path }}/{{ artifact.files[-1] | dirname }}/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+    owner: root
+    group: root
+    remote_src: true
+  loop:
+    # Binaries
+    - src: ffmpeg
+      dest: "{{ ffmpeg_bin_path }}/ffmpeg"
+      mode: '0755'
+    - src: ffprobe
+      dest: "{{ ffmpeg_bin_path }}/ffprobe"
+      mode: '0755'
+    # Man pages are being installed in the data path since they do not follow the format of an actual man page
+    - src: manpages
+      dest: "{{ ffmpeg_data_path }}"
+      mode: '0644'
+    # Data
+    - src: model
+      dest: "{{ ffmpeg_data_path }}"
+      mode: "0644"
+
+

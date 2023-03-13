@@ -1,0 +1,4 @@
+---
+
+- name: update manual
+  ansible.builtin.command: mandb

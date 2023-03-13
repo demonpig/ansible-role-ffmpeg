@@ -1,0 +1,7 @@
+---
+
+_static_build_info_url: "https://johnvansickle.com/ffmpeg/release-readme.txt"
+
+_static_git_build_url: "https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-{{ build_arch }}-static.tar.xz"
+
+_static_release_build_url: "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-{{ build_arch }}-static.tar.xz"

@@ -1,0 +1,15 @@
+---
+
+# Downloads the git-release of from the provider of the static builds. The git release tends to be the latest available
+# version of ffmpeg.
+# Type: boolean
+ffmpeg_use_git_build: false
+
+# Downloads the latest stable release from the provider of the static builds. This release typically follows the latest stable
+# version of ffmpeg.
+# Type: boolean
+ffmpeg_use_release_build: true
+
+# Determines if ffmpeg should be compiled from source.
+# Type: boolean
+ffmpeg_compile_src: false

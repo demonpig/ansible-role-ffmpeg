@@ -1,0 +1,4 @@
+---
+
+- name: Skip for now
+  ansible.builtin.command: echo hello world

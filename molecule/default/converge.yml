@@ -1,0 +1,6 @@
+---
+
+- name: Ffmpeg Role
+  hosts: all
+  roles:
+    - name: demonpig.ffmpeg

@@ -1,0 +1,15 @@
+---
+
+- name: Prepare Playbook
+  hosts: all
+  tasks:
+    - name: Install dependencies
+      ansible.builtin.package:
+        name: "{{ pkg_deps }}"
+        state: present
+      vars:
+        pkg_deps:
+          - bzip2
+          - unzip
+          - xz
+          - man

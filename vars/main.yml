@@ -1,0 +1,7 @@
+---
+
+base_path: "/usr/local"
+
+ffmpeg_bin_path: "{{ base_path }}/bin"
+ffmpeg_data_path: "{{ base_path }}/share/ffmpeg"
+ffmpeg_doc_path: "{{ base_path }}/man/man1/"
